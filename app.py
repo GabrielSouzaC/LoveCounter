@@ -6,7 +6,7 @@ import base64
 
 def main():
     st.set_page_config(
-        page_title="💕 Contador do Amor",
+        page_title="nosso contador",
         page_icon="💕",
         layout="wide"
     )
