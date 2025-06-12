@@ -222,7 +222,7 @@ def main():
             },
             'memoria6': {
                 'revelada': False,
-                'mensagem': 'THESE BITCHES LOVE SOSA!!!!!',
+                'mensagem': 'THESE BITCHES LOVE SOSA!!!!',
                 'emoji': '✏️',
                 'foto': None
             }
