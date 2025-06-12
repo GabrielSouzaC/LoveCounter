@@ -103,7 +103,7 @@ def main():
     </style>
     """, unsafe_allow_html=True)
     
-    st.markdown('<h1 class="counter-header">💕 Contador do Nosso Amor 💕</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="counter-header">💕 nosso contador, alright!! 💕</h1>', unsafe_allow_html=True)
     
     # Data que se conheceram
     data_conheceram = datetime(2025, 5, 9)  # 9 de maio de 2025
@@ -353,6 +353,11 @@ def main():
         st.balloons()
         st.success("Amor enviado com sucesso! 💕✨")
         st.markdown("### 💖 Te amo mais a cada segundo que passa!")
+
+    if st.button("us?", type="primary"):
+        st.snow()
+        st.success("damn!!")
+        st.markdown("### A HUUUUG!!!!!!")
 
 if __name__ == "__main__":
     main()
