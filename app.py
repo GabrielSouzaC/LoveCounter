@@ -210,7 +210,7 @@ def main():
             },
             'memoria4': {
                 'revelada': False,
-                'mensagem': 'primeiro dia que fui na sua casa 🏠',
+                'mensagem': 'primeira sonequinha juntos na minha casa 🏠',
                 'emoji': '🏠',
                 'foto': None
             },
@@ -222,7 +222,7 @@ def main():
             },
             'memoria6': {
                 'revelada': False,
-                'mensagem': 'Escreva sua própria memória aqui...',
+                'mensagem': 'THESE BITCHES LOVE SOSA!!!!!',
                 'emoji': '✏️',
                 'foto': None
             }
