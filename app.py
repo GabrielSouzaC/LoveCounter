@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import time
 import random
 import base64
+import os
 
 def main():
     st.set_page_config(
@@ -11,11 +12,11 @@ def main():
         layout="wide"
     )
     
-    # CSS personalizado com fundo escuro para melhor contraste
+    # CSS personalizado com fundo mais claro e romântico
     st.markdown("""
     <style>
     .main {
-        background-color: #0D1117;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
     .counter-header {
         text-align: center;
@@ -25,7 +26,7 @@ def main():
         text-shadow: 0px 0px 10px rgba(255, 107, 149, 0.5);
     }
     .counter-card {
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.60);
         padding: 30px;
         border-radius: 20px;
         margin: 20px 0;
@@ -68,7 +69,7 @@ def main():
         font-size: 36px;
     }
     .stApp {
-        background-color: #0D1117;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
     .css-18e3th9 {
         padding-top: 0;
@@ -91,6 +92,14 @@ def main():
     .stTabs [aria-selected="true"] {
         background-color: rgba(255, 107, 149, 0.8) !important;
     }
+    .memory-card {
+        background: rgba(255, 255, 255, 0.60);
+        padding: 20px;
+        border-radius: 15px;
+        margin: 10px 0;
+        box-shadow: 0 4px 15px rgba(255, 107, 149, 0.3);
+        border: 2px solid rgba(255, 107, 149, 0.3);
+    }
     </style>
     """, unsafe_allow_html=True)
     
@@ -99,7 +108,7 @@ def main():
     # Data que se conheceram
     data_conheceram = datetime(2025, 5, 9)  # 9 de maio de 2025
     
-    # Data de início do relacionamento (personalize aqui!)
+    # Data de início do relacionamento
     inicio_relacionamento = datetime(2025, 5, 16)  # 16 de maio de 2025
     
     # Calcular tempo juntos
@@ -185,56 +194,54 @@ def main():
     
     # Quadradinhos de memórias espalhados pela tela
     st.markdown("### 💖 Nossas Memórias Especiais")
-    st.markdown("Clique nos quadradinhos para revelar memórias especiais e adicionar fotos!")
+    st.markdown("Clique nos quadradinhos para revelar memórias especiais!")
     
-    # Inicializar memórias na sessão (apenas 6 memórias)
-    if 'memorias' not in st.session_state:
+    # Verificar se precisa reinicializar as memórias (compatibilidade)
+    if 'memorias' not in st.session_state or 'tipo' not in st.session_state.memorias.get('memoria1', {}):
         st.session_state.memorias = {
             'memoria1': {
                 'revelada': False,
                 'mensagem': 'primeira vez em que eu te vi!!! 💫',
                 'emoji': '😍',
-                'foto': None
+                'tipo': 'video',
+                'arquivo': 'media/video.mp4'
             },
             'memoria2': {
                 'revelada': False,
                 'mensagem': 'lembra do nosso primeiro beijo? 💋',
                 'emoji': '💋',
-                'foto': None
+                'tipo': 'foto',
+                'arquivo': 'media/foto2.jpeg'
             },
             'memoria3': {
                 'revelada': False,
                 'mensagem': 'primeiro role ref junto 💯',
                 'emoji': '💯',
-                'foto': None
+                'tipo': 'foto',
+                'arquivo': 'media/foto3.jpeg'
             },
             'memoria4': {
                 'revelada': False,
                 'mensagem': 'primeira sonequinha juntos na minha casa 🏠',
                 'emoji': '🏠',
-                'foto': None
+                'tipo': 'foto',
+                'arquivo': 'media/foto4.jpeg'
             },
             'memoria5': {
                 'revelada': False,
                 'mensagem': 'nosso primeiro jantar rsrs (hoje!)🌹',
                 'emoji': '🌹',
-                'foto': None
+                'tipo': 'vazio',
+                'arquivo': None
             },
             'memoria6': {
                 'revelada': False,
                 'mensagem': 'THESE BITCHES LOVE SOSA!!!!',
                 'emoji': '✏️',
-                'foto': None
+                'tipo': 'foto',
+                'arquivo': 'media/foto6.jpeg'
             }
         }
-    
-    # Função para exibir imagem
-    def get_image_base64(image_file):
-        if image_file is not None:
-            bytes_data = image_file.getvalue()
-            b64 = base64.b64encode(bytes_data).decode()
-            return b64
-        return None
     
     # Criar grid de quadradinhos (2 linhas x 3 colunas = 6 memórias)
     num_rows = 2
@@ -256,31 +263,41 @@ def main():
                         st.rerun()
                 else:
                     # Exibir memória revelada
-                    st.markdown(f"### {memoria['emoji']} Memória Especial")
+                    st.markdown(f"""
+                    <div class="memory-card">
+                        <h4 style="color: #333 !important; text-align: center;">{memoria['emoji']} Memória Especial</h4>
+                        <p style="color: #333 !important; text-align: center; font-style: italic;">{memoria['mensagem']}</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Exibir mídia baseada no tipo
+                    if memoria.get('tipo') == 'video' and memoria.get('arquivo'):
+                        try:
+                            st.video(memoria['arquivo'])
+                        except Exception as e:
+                            st.error(f"Erro ao carregar vídeo: {e}")
+                            st.info("Certifique-se de que o arquivo video.mp4 está na pasta media/")
+                    elif memoria.get('tipo') == 'foto' and memoria.get('arquivo'):
+                        try:
+                            st.image(memoria['arquivo'], caption="Nossa foto especial ❤️", use_column_width=True)
+                        except Exception as e:
+                            st.error(f"Erro ao carregar foto: {e}")
+                            st.info("Certifique-se de que a foto está na pasta media/")
+                    elif memoria.get('tipo') == 'vazio':
+                        st.info("📷 Foto será adicionada em breve...")
+                        # Opção para upload manual
+                        uploaded_file = st.file_uploader("Ou adicione uma foto agora:", 
+                                                       type=["jpg", "jpeg", "png"], 
+                                                       key=f"upload_{memoria_id}")
+                        if uploaded_file is not None:
+                            st.image(uploaded_file, caption="Nossa foto especial ❤️", use_column_width=True)
                     
                     # Campo editável para a mensagem
-                    nova_mensagem = st.text_area("Mensagem:", 
+                    nova_mensagem = st.text_area("Editar mensagem:", 
                                                value=memoria['mensagem'], 
                                                key=f"msg_{memoria_id}",
-                                               height=100)
+                                               height=80)
                     st.session_state.memorias[memoria_id]['mensagem'] = nova_mensagem
-                    
-                    # Upload de foto
-                    uploaded_file = st.file_uploader("Adicionar uma foto:", 
-                                                   type=["jpg", "jpeg", "png"], 
-                                                   key=f"upload_{memoria_id}")
-                    
-                    if uploaded_file is not None:
-                        # Salvar a foto na sessão
-                        st.session_state.memorias[memoria_id]['foto'] = uploaded_file
-                        
-                        # Exibir a imagem
-                        st.image(uploaded_file, caption="Nossa foto especial", use_column_width=True)
-                    elif st.session_state.memorias[memoria_id]['foto'] is not None:
-                        # Exibir foto já carregada anteriormente
-                        st.image(st.session_state.memorias[memoria_id]['foto'], 
-                               caption="Nossa foto especial", 
-                               use_column_width=True)
                     
                     # Botão para esconder a memória
                     if st.button("Esconder", key=f"hide_{memoria_id}"):
